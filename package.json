@@ -1,6 +1,6 @@
 {
   "name": "spanish-ssn",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Spanish Social Security Number validation",
   "repository": "https://github.com/jjavierdguezas/spanish-ssn.git",
   "author": "jjavierdguezas <jjavierdguezas@gmail.com>",
@@ -37,7 +37,8 @@
   },
   "files": [
     "dist",
-    "package.json"
+    "package.json",
+    "README.md"
   ],
   "exports": {
     ".": {
