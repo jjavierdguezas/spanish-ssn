@@ -5,7 +5,6 @@
   "repository": "https://github.com/jjavierdguezas/spanish-ssn.git",
   "author": "jjavierdguezas <jjavierdguezas@gmail.com>",
   "license": "MIT",
-  "private": true,
   "devDependencies": {
     "@types/chai": "^4.3.5",
     "@types/mocha": "^10.0.1",
