@@ -1,61 +1,51 @@
-const PROVINCE_CODES = {
-  '02': 'Albacete',
-  '16': 'Cuenca',
-  '36': 'Pontevedra',
-  '03': 'Alicante/Alacant',
-  '20': 'Gipuzkoa',
-  '26': 'Rioja, La',
-  '04': 'Almería',
-  '17': 'Girona',
-  '37': 'Salamanca',
-  '01': 'Araba/Álava',
-  '18': 'Granada',
-  '38': 'Santa Cruz de Tenerife',
-  '33': 'Asturias',
-  '19': 'Guadalajara',
-  '40': 'Segovia',
-  '05': 'Ávila',
-  '21': 'Huelva',
-  '41': 'Sevilla',
-  '06': 'Badajoz',
-  '22': 'Huesca',
-  '42': 'Soria',
-  '07': 'Balears, Illes',
-  '23': 'Jaén',
-  '43': 'Tarragona',
-  '08': 'Barcelona',
-  '24': 'León',
-  '44': 'Teruel',
-  '48': 'Bizkaia',
-  '25': 'Lleida',
-  '45': 'Toledo',
-  '09': 'Burgos',
-  '27': 'Lugo',
-  '46': 'Valencia/València',
-  '10': 'Cáceres',
-  '28': 'Madrid',
-  '47': 'Valladolid',
-  '11': 'Cádiz',
-  '29': 'Málaga',
-  '49': 'Zamora',
-  '39': 'Cantabria',
-  '30': 'Murcia',
-  '50': 'Zaragoza',
-  '12': 'Castellón/Castelló',
-  '31': 'Navarra',
-  '51': 'Ceuta',
-  '13': 'Ciudad Real',
-  '32': 'Ourense',
-  '52': 'Melilla',
-  '14': 'Córdoba',
-  '34': 'Palencia',
-  '15': 'Coruña, A',
-  '35': 'Palmas, Las',
-  '53': 'Otros territorios',
-  '66': 'Extranjero'
+import { PROVINCE_CODES, PROVINCE_DICT } from './constants';
+import { type SsnValidationResult, SsnValidationErrorCode } from './types';
+
+export const isValidSsn = (str: string): boolean => {
+  return validateSsn(str).isValid;
 };
 
-export const isValidSsn = (s: string): boolean => {
-  console.log(PROVINCE_CODES);
-  return true;
+export const validateSsn = (str: string): SsnValidationResult => {
+  if (![11, 12].includes((str ?? '').length))
+    return {
+      isValid: false,
+      errorCode: SsnValidationErrorCode.INVALID_LENGTH
+    };
+
+  if (![...str].every((c) => c >= '0' && c <= '9'))
+    return {
+      isValid: false,
+      errorCode: SsnValidationErrorCode.INVALID_CHAR
+    };
+
+  // code/number/control
+  //   aa/bbbbbbb/cc
+  //   aabbbbbbb % 97 === cc
+  const l1 = str.slice(0, 2);
+  const l2 = str.slice(2, -2);
+  const l3 = str.slice(-2);
+
+  if (!PROVINCE_CODES.has(l1))
+    return {
+      isValid: false,
+      errorCode: SsnValidationErrorCode.INVALID_PROVINCE_CODE
+    };
+
+  const ns =
+    l2[0] === '0' && str.length === 12 ? `${l1}${l2.slice(1)}` : `${l1}${l2}`;
+  const r = parseInt(ns) % 97;
+
+  if (r.toString().padStart(2, '0') !== l3)
+    return {
+      isValid: false,
+      errorCode: SsnValidationErrorCode.INVALID_CONTROL_DIGITS
+    };
+
+  return {
+    isValid: true,
+    controlDigits: l3,
+    number: ns,
+    province: PROVINCE_DICT[l1],
+    provinceCode: l1
+  };
 };
