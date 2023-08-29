@@ -1,0 +1,51 @@
+{
+  "name": "spanish-ssn",
+  "version": "1.0.0",
+  "description": "Spanish Social Security Number validation",
+  "repository": "https://github.com/jjavierdguezas/spanish-ssn.git",
+  "author": "jjavierdguezas <jjavierdguezas@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.4.0",
+    "eslint": "^8.0.1",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-config-standard-with-typescript": "^39.0.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
+    "eslint-plugin-promise": "^6.0.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^14.0.1",
+    "prettier": "^3.0.2",
+    "tsup": "^7.2.0",
+    "typescript": "*"
+  },
+  "scripts": {
+    "build": "tsup ./src",
+    "eslint:check": "npx eslint --max-warnings=0 \"./src/**/*.{ts,js}\"",
+    "eslint:fix": "npx eslint \"./src/**/*.{ts,js}\" --fix",
+    "prettier:check": "npx prettier --ignore-unknown --check .",
+    "prettier:fix": "npx prettier --ignore-unknown --write .",
+    "linters": "yarn eslint:check && yarn prettier:check",
+    "version:patch": "yarn version --no-git-tag-version --patch",
+    "prepare": "husky install"
+  },
+  "files": [
+    "dist",
+    "package.json"
+  ],
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "lint-staged": {
+    "*.{ts,js}": "eslint",
+    "*.{js,ts,json}": "prettier --check"
+  }
+}
